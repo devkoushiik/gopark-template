@@ -1,0 +1,17 @@
+# Cloudflare Pages response headers (copied to out/ on build)
+
+# Hashed build assets never change: cache for a year
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Videos, images and brand files: cache for a week
+/videos/*
+  Cache-Control: public, max-age=604800
+/images/*
+  Cache-Control: public, max-age=604800
+/brand/*
+  Cache-Control: public, max-age=604800
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin

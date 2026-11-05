@@ -1,0 +1,702 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ------------------------------------------------------------------ */
+/* Fluid type — 320px → 1440px, locks outside. rem term keeps zoom.    */
+/* Declared in @theme so Tailwind emits text-hero, text-h1… utilities. */
+/* ------------------------------------------------------------------ */
+@theme {
+  --text-hero: clamp(2.25rem, 1.821rem + 2.143vw, 3.75rem);
+  --text-hero--line-height: 1.05;
+  --text-hero--letter-spacing: -0.02em;
+  --text-h1: clamp(1.75rem, 1.464rem + 1.429vw, 2.75rem);
+  --text-h1--line-height: 1.1;
+  --text-h1--letter-spacing: -0.02em;
+  --text-h2: clamp(1.375rem, 1.196rem + 0.893vw, 2rem);
+  --text-h2--line-height: 1.2;
+  --text-h2--letter-spacing: -0.01em;
+  --text-h3: clamp(1.125rem, 1.054rem + 0.357vw, 1.375rem);
+  --text-h3--line-height: 1.3;
+  --text-body: clamp(1rem, 0.964rem + 0.179vw, 1.125rem);
+  --text-body--line-height: 1.6;
+  /* Supporting text (Tailwind `text-sm`): fluid 15px (320px) -> 16px (1440px) */
+  --text-sm: clamp(0.9375rem, 0.92rem + 0.089vw, 1rem);
+  --text-sm--line-height: 1.5;
+  --text-fine: clamp(0.75rem, 0.732rem + 0.089vw, 0.8125rem);
+  --text-fine--line-height: 1.5;
+  --text-ref: clamp(1.375rem, 1.196rem + 0.893vw, 2rem);
+  --text-ref--line-height: 1.2;
+
+  --breakpoint-sm: 40rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 80rem;
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-heading: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+
+  --spacing-3xs: var(--space-3xs);
+  --spacing-2xs: var(--space-2xs);
+  --spacing-xs: var(--space-xs);
+  --spacing-s: var(--space-s);
+  --spacing-m: var(--space-m);
+  --spacing-l: var(--space-l);
+  --spacing-xl: var(--space-xl);
+  --spacing-gutter: var(--gutter);
+  --spacing-section: var(--section-y);
+  --spacing-control: var(--control-h);
+  --spacing-cta: var(--cta-h);
+  --spacing-header: var(--header-h);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-soft-foreground: var(--brand-soft-foreground);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-foreground: var(--ink-foreground);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-subtle: var(--ink-subtle);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-destructive: var(--destructive);
+  --color-destructive-surface: var(--destructive-surface);
+  --color-warning: var(--warning);
+  --color-warning-surface: var(--warning-surface);
+  --color-success: var(--success);
+  --color-success-surface: var(--success-surface);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+  --radius-card: var(--radius-card);
+}
+
+:root {
+  /* Brand palette: royal blue + navy ink + cool blue-grey neutrals (spec §2) */
+  --background: #ffffff;
+  --foreground: #0b0f19;
+  --card: #ffffff;
+  --card-foreground: #0b0f19;
+  --popover: #ffffff;
+  --popover-foreground: #0b0f19;
+  --primary: #2563eb; /* 5.2:1 on white — AA for text & UI */
+  --primary-hover: #1d4ed8;
+  --primary-foreground: #ffffff;
+  --secondary: #f3f6fb;
+  --secondary-foreground: #1e2433;
+  --muted: #f3f6fb;
+  --muted-foreground: #5b6476; /* 5.9:1 on white */
+  --accent: #e8eefa;
+  --accent-foreground: #0b0f19;
+  --brand-soft: #e8efff;
+  --brand-soft-foreground: #1d4ed8;
+  --ink: #0b0f19; /* dark hero / footer / feature tiles */
+  --ink-2: #141a29;
+  --ink-foreground: #ffffff;
+  --ink-muted: #a7b0c2; /* 8.4:1 on ink */
+  --ink-subtle: #7c869a; /* 5.1:1 on ink */
+  --border: #e3e8f2;
+  --input: #d3dae8;
+  --ring: #2563eb;
+  --destructive: #dc2626;
+  --destructive-surface: #fef2f2;
+  --warning: #d97706;
+  --warning-surface: #fffbeb;
+  --success: #16a34a;
+  --success-surface: #f0fdf4;
+
+  /* Fluid space */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: clamp(0.5rem, 0.429rem + 0.357vw, 0.75rem);
+  --space-s: clamp(1rem, 0.929rem + 0.357vw, 1.25rem);
+  --space-m: clamp(1.5rem, 1.357rem + 0.714vw, 2rem);
+  --space-l: clamp(2rem, 1.714rem + 1.429vw, 3rem);
+  --space-xl: clamp(3rem, 2.429rem + 2.857vw, 5rem);
+  --section-y: clamp(3rem, 1.571rem + 7.143vw, 8rem);
+  --gutter: clamp(1rem, 0.429rem + 2.857vw, 3rem);
+
+  /* Shape & shell */
+  --radius: 0.75rem;
+  --radius-card: clamp(0.75rem, 0.679rem + 0.357vw, 1rem);
+  --control-h: 3rem;
+  --cta-h: 3.25rem;
+  --header-h: clamp(3.5rem, 3.214rem + 1.429vw, 4.5rem);
+  --container: 80rem;
+  --container-narrow: 36rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-padding-top: calc(var(--header-h) + var(--space-s));
+  }
+  body {
+    @apply bg-background text-foreground text-body;
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  /* Tailwind v4 preflight resets buttons to cursor: default; restore the pointer. */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [role="tab"],
+  [role="radio"],
+  select:not(:disabled),
+  summary,
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled) {
+    cursor: pointer;
+  }
+  :disabled,
+  [aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Layout primitives (spec §3)                                          */
+/* ------------------------------------------------------------------ */
+@utility container-fluid {
+  inline-size: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
+}
+@utility container-narrow {
+  inline-size: min(100% - 2 * var(--gutter), var(--container-narrow));
+  margin-inline: auto;
+}
+@utility container-prose {
+  inline-size: min(100% - 2 * var(--gutter), 65ch);
+  margin-inline: auto;
+}
+@utility section {
+  padding-block: var(--section-y);
+}
+/* Below-the-fold sections: skip style/layout/paint until near the viewport.
+   `auto` in the size hint makes the browser remember the real height once rendered. */
+@utility section-defer {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+@utility stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--stack-gap, var(--space-s));
+}
+@utility cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs);
+}
+@utility auto-grid {
+  display: grid;
+  gap: var(--space-l);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--grid-min, 18rem)), 1fr));
+}
+@utility switcher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-l);
+  & > * {
+    flex: 1 1 calc((var(--switch-at, 40rem) - 100%) * 999);
+  }
+}
+@utility sidebar-layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-l);
+  & > :first-child {
+    flex: 1 1 var(--side, 16rem);
+  }
+  & > :last-child {
+    flex: 999 1 0;
+    min-inline-size: 60%;
+  }
+}
+@utility eyebrow {
+  font-size: var(--text-fine);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+@utility plate {
+  font-family: var(--font-geist-mono), monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+@utility measure {
+  max-inline-size: 65ch;
+}
+@utility safe-bottom {
+  padding-block-end: max(var(--space-s), env(safe-area-inset-bottom));
+}
+
+/* Low-poly decorative surface — facets scale with viewport */
+@utility poly-surface {
+  background-color: var(--secondary);
+  background-image:
+    linear-gradient(135deg, transparent 49.5%, #e3e8f2 50%, transparent 50.5%),
+    linear-gradient(35deg, transparent 49.5%, #eaeef6 50%, transparent 50.5%);
+  background-size:
+    clamp(56px, 4vw + 40px, 96px) clamp(56px, 4vw + 40px, 96px),
+    clamp(84px, 6vw + 60px, 144px) clamp(84px, 6vw + 60px, 144px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
+/* Vertical parking pass in two pieces: body + tear-off stub.
+   Notches are half-circles cut from each piece's touching corners. */
+@layer components {
+  .pass-body,
+  .pass-stub {
+    --notch: 0.75rem;
+  }
+  .pass-body {
+    mask:
+      radial-gradient(circle at 0 100%, #0000 var(--notch), #000 calc(var(--notch) + 0.5px)) left / 51% 100% no-repeat,
+      radial-gradient(circle at 100% 100%, #0000 var(--notch), #000 calc(var(--notch) + 0.5px)) right / 51% 100% no-repeat;
+  }
+  .pass-stub {
+    mask:
+      radial-gradient(circle at 0 0, #0000 var(--notch), #000 calc(var(--notch) + 0.5px)) left / 51% 100% no-repeat,
+      radial-gradient(circle at 100% 0, #0000 var(--notch), #000 calc(var(--notch) + 0.5px)) right / 51% 100% no-repeat;
+  }
+}
+
+
+/* ------------------------------------------------------------------ */
+/* Hero route strip choreography (one play on load).                   */
+/* 0.5s bus drives + road fills -> 3.0s terminal lights -> 3.2s takeoff */
+/* Resting state = final frame, so reduced motion shows "arrived".     */
+/* ------------------------------------------------------------------ */
+@theme {
+  --animate-route-drive: route-drive 2.6s cubic-bezier(0.65, 0, 0.35, 1) 0.5s both;
+  --animate-route-fill: route-fill 2.6s cubic-bezier(0.65, 0, 0.35, 1) 0.5s both;
+  --animate-terminal-arrive: terminal-arrive 0.4s ease-out 3s both;
+  --animate-plane-takeoff: plane-takeoff 1.6s cubic-bezier(0.5, 0, 0.2, 1) 3.2s both;
+
+
+  --animate-pin-drop: pin-drop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both;
+  --animate-card-swing: card-swing 1.8s cubic-bezier(0.25, 0.8, 0.3, 1) 0.35s both;
+
+  /* push-pin pressed into place */
+  @keyframes pin-drop {
+    0% { transform: translateY(-14px) scale(1.35); opacity: 0; }
+    60% { transform: translateY(1px) scale(0.92); opacity: 1; }
+    100% { transform: translateY(0) scale(1); opacity: 1; }
+  }
+  /* pass slips onto the pin and swings to rest (damped pendulum) */
+  @keyframes card-swing {
+    0% { transform: translateY(-10px) rotate(-5deg); opacity: 0; }
+    12% { opacity: 1; }
+    30% { transform: translateY(0) rotate(3deg); }
+    50% { transform: rotate(-1.6deg); }
+    68% { transform: rotate(0.8deg); }
+    84% { transform: rotate(-0.3deg); }
+    100% { transform: rotate(0); opacity: 1; }
+  }
+  --animate-stamp: stamp 0.55s cubic-bezier(0.2, 0.9, 0.3, 1.2) 1.9s both;
+
+  /* rubber stamp thumps onto the pass */
+  @keyframes stamp {
+    0% { transform: scale(1.8); opacity: 0; }
+    55% { transform: scale(0.9); opacity: 0.95; }
+    75% { transform: scale(1.04); }
+    100% { transform: scale(1); opacity: 0.85; }
+  }
+  --animate-rail-draw: rail-draw 0.9s cubic-bezier(0.65, 0, 0.35, 1) 0.6s both;
+  --animate-node-pop: node-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s both;
+
+  /* timeline track draws top to bottom */
+  @keyframes rail-draw {
+    from { transform: scaleY(0); }
+    to { transform: scaleY(1); }
+  }
+  /* timeline stops pop in */
+  @keyframes node-pop {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
+  }
+  --animate-flap: flap 0.11s cubic-bezier(0.3, 0, 0.2, 1) both;
+
+  /* split-flap tile: the new character flips down into place */
+  @keyframes flap {
+    from { transform: perspective(300px) rotateX(-85deg); }
+    to { transform: perspective(300px) rotateX(0); }
+  }
+  @keyframes route-drive {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+  }
+  @keyframes route-fill {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+  @keyframes terminal-arrive {
+    from { background-color: rgb(255 255 255 / 0.1); }
+    to { background-color: var(--primary); }
+  }
+  @keyframes plane-takeoff {
+    0% { transform: translate(0, 0); opacity: 1; }
+    40% { transform: translate(160%, -160%) rotate(-10deg); opacity: 0; }
+    41% { transform: translate(-160%, 160%); opacity: 0; }
+    100% { transform: translate(0, 0); opacity: 1; }
+  }
+}
+
+
+/* ------------------------------------------------------------------ */
+/* Isometric scenes (How it works). Plain classes, not @theme tokens,   */
+/* so they hot-reload; motion only when the user allows it.            */
+/* ------------------------------------------------------------------ */
+@keyframes iso-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+@keyframes iso-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@keyframes iso-grow {
+  0% { transform: scaleX(0); }
+  30%, 80% { transform: scaleX(1); }
+  100% { transform: scaleX(0); }
+}
+@keyframes iso-pop {
+  0%, 45% { transform: translateY(10px) scale(0.4); opacity: 0; }
+  60%, 90% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 0; }
+}
+/* +y world direction on screen = (-0.866, 0.5) per unit */
+@keyframes iso-drive {
+  0% { transform: translate(-46px, 27px); opacity: 0; }
+  12% { opacity: 1; }
+  55%, 85% { transform: translate(0, 0); opacity: 1; }
+  100% { transform: translate(0, 0); opacity: 0; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .iso-float,
+  .iso-bob,
+  .iso-grow,
+  .iso-pop,
+  .iso-drive {
+    transform-box: fill-box;
+  }
+  .iso-float { transform-origin: center; animation: iso-float 5s ease-in-out infinite; }
+  .iso-bob { transform-origin: bottom; animation: iso-bob 2.4s ease-in-out infinite; }
+  .iso-grow { transform-origin: left; animation: iso-grow 3.6s cubic-bezier(0.65, 0, 0.35, 1) infinite; }
+  .iso-pop { transform-origin: bottom; animation: iso-pop 3.6s cubic-bezier(0.34, 1.56, 0.64, 1) infinite; }
+  .iso-drive { animation: iso-drive 5.5s cubic-bezier(0.45, 0, 0.2, 1) infinite; }
+}
+
+/* ------------------------------------------------------------------ */
+/* Scroll reveal (components/home/reveal.tsx). Animation, not transition,
+   so it never fights an element's own hover transitions. */
+/* ------------------------------------------------------------------ */
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(56px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .reveal:not([data-shown]) { opacity: 0; }
+  .reveal[data-shown] { animation: reveal-up 0.85s cubic-bezier(0.22, 1, 0.36, 1) both; }
+}
+
+
+/* Card slider countdown ring (components/ui/card-slider.tsx) */
+@keyframes slider-ring {
+  from { stroke-dashoffset: 100; }
+  to { stroke-dashoffset: 0; }
+}
+.slider-ring {
+  stroke-dashoffset: 100;
+  animation-name: slider-ring;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+/* Cancellation: dial arc sweeps the 24h window, receipt drops in, once revealed */
+.cancel-receipt {
+  mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 14px 100%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .cancel-card .cancel-arc { stroke-dashoffset: 100; }
+  .cancel-card[data-shown] .cancel-arc {
+    animation: cancel-sweep 1.8s cubic-bezier(0.65, 0, 0.35, 1) 0.3s forwards;
+  }
+  .cancel-card .cancel-receipt { opacity: 0; transform: translateY(-24px) rotate(-3deg); }
+  .cancel-card[data-shown] .cancel-receipt {
+    animation: cancel-drop 0.9s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards;
+  }
+}
+@keyframes cancel-sweep { to { stroke-dashoffset: 0; } }
+@keyframes cancel-drop { to { opacity: 1; transform: translateY(0) rotate(0deg); } }
+
+/* Contact hero: thick gradient rings cropped by the section edges, slowly turning */
+@layer components {
+  .edge-arc {
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+    border-radius: 9999px;
+    background: conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      var(--primary) 140deg,
+      color-mix(in oklab, var(--primary) 40%, white) 220deg,
+      transparent 300deg
+    );
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 4.5rem), #000 calc(100% - 4.5rem + 1px));
+    mask: radial-gradient(farthest-side, transparent calc(100% - 4.5rem), #000 calc(100% - 4.5rem + 1px));
+    /* soft accent: same ring, just quiet enough not to compete with the copy */
+    opacity: 0.4;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .edge-arc { animation: edge-arc-spin var(--arc-dur, 28s) linear infinite var(--arc-dir, normal); }
+  }
+  @keyframes edge-arc-spin {
+    from { transform: rotate(var(--arc-start, 0deg)); }
+    to { transform: rotate(calc(var(--arc-start, 0deg) + 360deg)); }
+  }
+}
+
+/* Footer newsletter paper plane */
+@keyframes nl-float {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(5px, -9px) rotate(-2deg); }
+}
+@keyframes nl-streak {
+  0% { transform: translate(26px, -19px); opacity: 0; }
+  25% { opacity: 1; }
+  100% { transform: translate(-30px, 22px); opacity: 0; }
+}
+
+/* Notepad sheet: a row of punched holes along the top edge (contact page) */
+.notepad {
+  --hole: 5px;
+  mask:
+    radial-gradient(circle at 50% 14px, #0000 var(--hole), #000 calc(var(--hole) + 0.5px)) 0 0 / 22px 100% repeat-x;
+}
+
+/* ------------------------------------------------------------------ */
+/* About "Getting here" timeline, in step with the 6s shuttle loop in
+   components/home/cta-route.tsx (idle 0-8%, drives 8-80%, resets at 100%).
+   Resting state = every stop reached, so reduced motion shows "arrived". */
+/* ------------------------------------------------------------------ */
+.journey-node { background-color: var(--primary); color: var(--primary-foreground); box-shadow: 0 0 0 5px color-mix(in oklab, var(--primary) 18%, transparent); }
+.journey-fill { transform-origin: top; }
+@media (prefers-reduced-motion: no-preference) {
+  .journey-node[data-step="1"] { animation: journey-node-1 6s ease-in-out infinite; }
+  .journey-node[data-step="2"] { animation: journey-node-2 6s ease-in-out infinite; }
+  .journey-node[data-step="3"] { animation: journey-node-3 6s ease-in-out infinite; }
+  .journey-fill[data-step="1"] { animation: journey-fill-1 6s linear infinite; }
+  .journey-fill[data-step="2"] { animation: journey-fill-2 6s linear infinite; }
+}
+@keyframes journey-node-1 {
+  0%, 6% { background-color: var(--brand-soft); color: var(--primary); box-shadow: 0 0 0 0 transparent; }
+  12%, 96% { background-color: var(--primary); color: var(--primary-foreground); box-shadow: 0 0 0 5px color-mix(in oklab, var(--primary) 18%, transparent); }
+  100% { background-color: var(--brand-soft); color: var(--primary); box-shadow: 0 0 0 0 transparent; }
+}
+@keyframes journey-node-2 {
+  0%, 40% { background-color: var(--brand-soft); color: var(--primary); box-shadow: 0 0 0 0 transparent; }
+  46%, 96% { background-color: var(--primary); color: var(--primary-foreground); box-shadow: 0 0 0 5px color-mix(in oklab, var(--primary) 18%, transparent); }
+  100% { background-color: var(--brand-soft); color: var(--primary); box-shadow: 0 0 0 0 transparent; }
+}
+@keyframes journey-node-3 {
+  0%, 74% { background-color: var(--brand-soft); color: var(--primary); box-shadow: 0 0 0 0 transparent; }
+  80%, 96% { background-color: var(--primary); color: var(--primary-foreground); box-shadow: 0 0 0 5px color-mix(in oklab, var(--primary) 18%, transparent); }
+  100% { background-color: var(--brand-soft); color: var(--primary); box-shadow: 0 0 0 0 transparent; }
+}
+@keyframes journey-fill-1 {
+  0%, 12% { transform: scaleY(0); opacity: 1; }
+  44%, 96% { transform: scaleY(1); opacity: 1; }
+  100% { transform: scaleY(1); opacity: 0; }
+}
+@keyframes journey-fill-2 {
+  0%, 46% { transform: scaleY(0); opacity: 1; }
+  80%, 96% { transform: scaleY(1); opacity: 1; }
+  100% { transform: scaleY(1); opacity: 0; }
+}
+
+/* ------------------------------------------------------------------ */
+/* Contact page cards (app/(marketing)/contact/page.tsx) and the FAQ "Popular questions" sheet (components/faq/faq-browser.tsx).
+   Sheet: plays on load. Notepad: plays when it scrolls into view (Reveal sets data-shown).
+   Keyframes only give the START state (fill: backwards), so each element ends on its own
+   Tailwind rotate / translate. Reduced motion: no rules apply, everything is simply there. */
+/* ------------------------------------------------------------------ */
+@keyframes sheet-fan { from { rotate: 0deg; translate: 0 10px; opacity: 0; } }
+@keyframes sheet-land { from { translate: 0 30px; rotate: -4deg; opacity: 0; } }
+@keyframes sheet-clip {
+  0% { translate: 0 -26px; opacity: 0; }
+  60% { translate: 0 4px; opacity: 1; }
+  100% { translate: 0 0; opacity: 1; }
+}
+@keyframes sheet-binder { from { translate: 16px -50%; opacity: 0; } }
+@keyframes sheet-row { from { translate: 0 12px; opacity: 0; } }
+@keyframes sheet-mark { from { clip-path: inset(-6px 100% -6px -6px); } to { clip-path: inset(-6px); } }
+@keyframes sheet-tape { from { scale: 1.3; rotate: -9deg; opacity: 0; } to { scale: 1; rotate: -2deg; opacity: 1; } }
+
+@keyframes pad-back { from { translate: -22px 0; rotate: -1deg; opacity: 0; } }
+@keyframes pad-lift { from { translate: 0 40px; rotate: -5deg; opacity: 0; } }
+@keyframes pad-line { from { translate: 0 14px; opacity: 0; } }
+@keyframes pad-badge { from { scale: 0.4; translate: 0 10px; opacity: 0; } }
+@keyframes pad-pencil { from { scale: 0.5; rotate: -30deg; opacity: 0; } }
+@keyframes pad-sway {
+  0%, 100% { rotate: 0deg; translate: 0 0; }
+  50% { rotate: -8deg; translate: 1px -2px; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .anim-sheet .sheet-back-a { animation: sheet-fan 1s cubic-bezier(0.22, 1, 0.36, 1) 0.15s backwards; }
+  .anim-sheet .sheet-back-b { animation: sheet-fan 1s cubic-bezier(0.22, 1, 0.36, 1) 0.25s backwards; }
+  .anim-sheet .sheet-main { animation: sheet-land 0.9s cubic-bezier(0.22, 1, 0.36, 1) backwards; }
+  .anim-sheet .sheet-clip { animation: sheet-clip 0.8s cubic-bezier(0.34, 1.4, 0.64, 1) 0.7s backwards; }
+  .anim-sheet .sheet-binder { animation: sheet-binder 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.85s backwards; }
+  .anim-sheet .sheet-row { animation: sheet-row 0.7s cubic-bezier(0.22, 1, 0.36, 1) backwards; }
+  .anim-sheet .sheet-row:nth-child(1) { animation-delay: 0.45s; }
+  .anim-sheet .sheet-row:nth-child(2) { animation-delay: 0.6s; }
+  .anim-sheet .sheet-row:nth-child(3) { animation-delay: 0.75s; }
+  .anim-sheet .sheet-row:nth-child(4) { animation-delay: 0.9s; }
+  .anim-sheet .sheet-row:nth-child(5) { animation-delay: 1.05s; }
+  .anim-sheet .sheet-mark { animation: sheet-mark 0.6s ease-out 0.45s backwards; }
+  .anim-sheet .sheet-row:nth-child(1) .sheet-mark { animation-delay: 0.8s; }
+  .anim-sheet .sheet-row:nth-child(2) .sheet-mark { animation-delay: 0.95s; }
+  .anim-sheet .sheet-row:nth-child(3) .sheet-mark { animation-delay: 1.1s; }
+  .anim-sheet .sheet-tape { animation: sheet-tape 0.6s cubic-bezier(0.34, 1.4, 0.64, 1) 1.2s backwards; }
+
+  .anim-pad:not([data-shown]) :is(.pad-back, .pad-main, .pad-badge, .pad-pencil, .pad-l1, .pad-l2, .pad-l3, .pad-l4) { opacity: 0; }
+  .anim-pad[data-shown] .pad-back { animation: pad-back 1s cubic-bezier(0.22, 1, 0.36, 1) backwards; }
+  .anim-pad[data-shown] .pad-main { animation: pad-lift 0.95s cubic-bezier(0.22, 1, 0.36, 1) 0.1s backwards; }
+  .anim-pad[data-shown] .pad-badge { animation: pad-badge 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s backwards; }
+  .anim-pad[data-shown] :is(.pad-l1, .pad-l2, .pad-l3, .pad-l4) { animation: pad-line 0.7s cubic-bezier(0.22, 1, 0.36, 1) backwards; }
+  .anim-pad[data-shown] .pad-l1 { animation-delay: 0.35s; }
+  .anim-pad[data-shown] .pad-l2 { animation-delay: 0.45s; }
+  .anim-pad[data-shown] .pad-l3 { animation-delay: 0.55s; }
+  .anim-pad[data-shown] .pad-l4 { animation-delay: 0.7s; }
+  .anim-pad[data-shown] .pad-pencil { animation: pad-pencil 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.95s backwards; }
+  /* very gentle idle: the pencil sways like it's about to write */
+  .anim-pad[data-shown] .pad-pencil-icon { animation: pad-sway 3.6s ease-in-out 2.2s infinite; }
+}
+
+/* ------------------------------------------------------------------ */
+/* Help panel with notched tiles (FAQ page "Still have questions?").
+   The panel itself rises via Reveal; inside it the copy fades up, the tiles rise one by one
+   and each notch arrow pops in last. Start states only (fill: backwards). */
+/* ------------------------------------------------------------------ */
+@keyframes help-line { from { translate: 0 16px; opacity: 0; } }
+@keyframes help-tile { from { translate: 0 44px; scale: 0.96; opacity: 0; } }
+@keyframes help-arrow { from { scale: 0; rotate: -90deg; opacity: 0; } to { scale: 1; rotate: 0deg; opacity: 1; } }
+@media (prefers-reduced-motion: no-preference) {
+  .anim-help[data-shown] .help-copy > * { animation: help-line 0.8s cubic-bezier(0.22, 1, 0.36, 1) backwards; }
+  .anim-help[data-shown] .help-copy > :nth-child(1) { animation-delay: 0.25s; }
+  .anim-help[data-shown] .help-copy > :nth-child(2) { animation-delay: 0.4s; }
+  .anim-help[data-shown] .help-tile { animation: help-tile 0.9s cubic-bezier(0.22, 1, 0.36, 1) backwards; }
+  .anim-help[data-shown] .help-tile:nth-child(1) { animation-delay: 0.4s; }
+  .anim-help[data-shown] .help-tile:nth-child(2) { animation-delay: 0.55s; }
+  .anim-help[data-shown] .help-tile:nth-child(3) { animation-delay: 0.7s; }
+  .anim-help[data-shown] .help-tile .notch-arrow { animation: help-arrow 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) backwards; }
+  .anim-help[data-shown] .help-tile:nth-child(1) .notch-arrow { animation-delay: 0.95s; }
+  .anim-help[data-shown] .help-tile:nth-child(2) .notch-arrow { animation-delay: 1.1s; }
+  .anim-help[data-shown] .help-tile:nth-child(3) .notch-arrow { animation-delay: 1.25s; }
+}
+
+/* ------------------------------------------------------------------ */
+/* About "Why travellers park with us" cards: pop in 1, 2, 3 as they scroll into view.
+   Each card is its own Reveal (plain), its delay comes from the inline animation-delay;
+   the label chip and the white stat tab pop right behind their card. */
+/* ------------------------------------------------------------------ */
+@keyframes card-pop {
+  0% { scale: 0.82; translate: 0 28px; opacity: 0; }
+  60% { scale: 1.025; translate: 0 -4px; opacity: 1; }
+  100% { scale: 1; translate: 0 0; opacity: 1; }
+}
+@keyframes pop-in { from { scale: 0.6; opacity: 0; } }
+@media (prefers-reduced-motion: no-preference) {
+  .pop-card:not([data-shown]) { opacity: 0; }
+  .pop-card[data-shown] { animation: card-pop 0.85s cubic-bezier(0.22, 1, 0.36, 1) backwards; }
+  .pop-card[data-shown] .pop-tab { animation: pop-in 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 0.45s backwards; transform-origin: 0 0; }
+  .pop-card[data-shown] .pop-stat { animation: pop-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s backwards; transform-origin: 100% 100%; }
+  .pop-card:nth-child(2)[data-shown] .pop-tab { animation-delay: 0.61s; }
+  .pop-card:nth-child(2)[data-shown] .pop-stat { animation-delay: 0.76s; }
+  .pop-card:nth-child(3)[data-shown] .pop-tab { animation-delay: 0.77s; }
+  .pop-card:nth-child(3)[data-shown] .pop-stat { animation-delay: 0.92s; }
+}
+
+/* ------------------------------------------------------------------ */
+/* Services fan (components/services/services-fan.tsx), scroll animation.
+   xl+: every card starts flat in the middle of the row (translate/rotate cancel its own fan offset
+   and tilt) and spreads out to its place. Below xl (grid): cards rise in one by one.
+   Start states only (fill: backwards): each card ends on its own fan transform. */
+/* ------------------------------------------------------------------ */
+.anim-fan { container-type: inline-size; }
+@keyframes fan-spread {
+  0% { translate: var(--sx) calc(var(--y) * -1); rotate: calc(var(--rot) * -1); opacity: 0; }
+  20% { opacity: 1; }
+}
+@keyframes fan-rise { from { translate: 0 36px; scale: 0.96; opacity: 0; } }
+@media (prefers-reduced-motion: no-preference) {
+  .anim-fan:not([data-shown]) li { opacity: 0; }
+  /* distance from this card's slot to the middle slot of the row (slot step = (row - card width) / 5) */
+  .anim-fan li { --sx: calc((2.5 - var(--i)) * (100cqw - min(23rem, 21cqw)) / 5); }
+  @media (min-width: 80rem) {
+    .anim-fan[data-shown] li { animation: fan-spread 1.1s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--i) * 70ms + 100ms) backwards; }
+  }
+  @media (max-width: 79.999rem) {
+    .anim-fan[data-shown] li { animation: fan-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--i) * 90ms) backwards; }
+  }
+}
